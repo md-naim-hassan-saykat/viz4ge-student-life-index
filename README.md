@@ -33,7 +33,7 @@ The dashboard enables users to compare countries and explore relationships betwe
 ## Methodology
 
 **Data Source:** Eurostudent VII Survey  
-**Countries Included:** 25 European countries  
+**Countries Included:** European countries  
 **Normalization:** All variables scaled to 0–100  
 **Performance Index:** Composite metric derived from academic-related indicators  
 
