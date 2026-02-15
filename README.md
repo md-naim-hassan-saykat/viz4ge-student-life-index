@@ -97,14 +97,20 @@ p5.min.js         # p5.js library
 ## Running Locally
 
 Clone the repository:
+```bash
 git clone https://github.com/md-naim-hassan-saykat/viz4ge-student-life-index.git
 cd viz4ge-student-life-index
+```
 
 Start a local server:
+```bash
 python3 -m http.server 8000
+```
 
 Then open:
+```bash
 http://localhost:8000
+```
 
 ---
 
