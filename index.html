@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Housing cost and it's impact on Students</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts: Quicksand for a friendly, rounded look -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <h1>Housing cost and it's impact on Students</h1>
+  </header>
+
+  <main>
+    <!-- Section 0: Metrics Dashboard -->
+    <section id="metrics-dashboard">
+      <div id="metrics-container" class="metrics-grid">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- Section 1: Physics Hero (p5.js + Matter.js) -->
+    <section id="physics-hero">
+      <h2>Global Student Overview</h2>
+      <p>Click a bubble to see a deep-dive analysis below.</p>
+      <div id="p5-container"></div>
+      <div class="legend">
+        <span>Size = Housing Cost</span>
+        <span title="Performance Index score based on academic and work-life balance metrics.">Color
+          = Performance Index (Cyan=Low, Dark Blue=High; Gray=Missing Data) ℹ</span>
+      </div>
+    </section>
+
+    <!-- Section 3: Interactive Analysis Grid -->
+    <section id="analysis-grid">
+      <h2>Deep Dive Analysis</h2>
+
+      <!-- Tier 1: Key Comparisons -->
+      <div class="chart-grid">
+        <!-- Radar Chart (Comparison) -->
+        <div class="card">
+          <h3>Country Profile vs Global</h3>
+          <canvas id="radarCanvas"></canvas>
+          <p id="radar-insight" class="insight">Click a country bubble above to compare!</p>
+        </div>
+
+        <!-- Scatter Plot (Detail) -->
+        <div class="card">
+          <h3>Work vs Study Trends</h3>
+          <canvas id="scatterCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Tier 2: Distribution & Efficiency -->
+      <div class="chart-grid">
+        <div class="card">
+          <h3>Happiness Distribution</h3>
+          <canvas id="doughnutCanvas"></canvas>
+          <div style="margin-top: 15px; font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
+            <div><strong style="color: #22d3ee;">High (≥3.65):</strong> 9 countries</div>
+            <div><strong style="color: #fbbf24;">Medium (3.5-3.65):</strong> 8 countries</div>
+            <div><strong style="color: #f87171;">Low (&lt;3.5):</strong> 5 countries</div>
+            <div style="margin-top: 8px; font-size: 0.75rem; font-style: italic;">(excluding missing data)</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Performance Index (Top 10)</h3>
+          <canvas id="efficiencyBarCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Tier 3: Wellbeing & Ratios -->
+      <div class="chart-grid">
+        <div class="card">
+          <h3>Wellbeing Profile</h3>
+          <canvas id="polarAreaCanvas"></canvas>
+          <div class="chart-theory">
+            <ul>
+              <li><strong>Happy:</strong> Happiness Score (scaled 0-50)</li>
+              <li><strong>Mental:</strong> Self-Reported Score (0-100)</li>
+              <li><strong>Perf:</strong> Academic Performance Index (0-100)</li>
+              <li><strong>Free:</strong> Avg. Weekday Free Hours (approx)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Study/Work Ratio</h3>
+          <canvas id="ratioCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Tier 4: Macro Views -->
+      <div class="chart-grid">
+        <div class="card">
+          <h3>Total Time Investment</h3>
+          <canvas id="stackedBarCanvas"></canvas>
+        </div>
+        <div class="card">
+          <h3>Housing Cost Share (Treemap)</h3>
+          <canvas id="treemapCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Tier 5: Correlations -->
+      <div class="chart-grid">
+        <div class="card full-width">
+          <h3>Variable Correlations</h3>
+          <canvas id="heatmapCanvas"></canvas>
+          <div class="chart-theory">
+            <ul>
+              <li><strong>X-Axis:</strong> Housing Cost (Log Scale)</li>
+              <li><strong>Y-Axis:</strong> Happiness Score</li>
+              <li><strong>Size:</strong> Performance Index</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card full-width">
+          <h3>The Happiness Curve</h3>
+          <canvas id="lineCanvas"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Section 4: Bar Chart (Full Width) -->
+    <section id="bar-chart">
+      <div class="card">
+        <h2>Mental Health Rankings</h2>
+        <canvas id="barCanvas"></canvas>
+        <p class="insight">Self-reported mental health scores across countries.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Section 5: References (Glass Dock) -->
+  <section id="references">
+    <h2>Data Sources & References</h2>
+    <div class="ref-grid">
+      <a href="https://database.eurostudent.eu/drm/?eust_nr=8&e=happiness_5&fg=all_students&country_list=AT%2CAZ%2CCH%2CCZ%2CDE%2CDK%2CEE%2CES%2CFI%2CFR%2CGE%2CHR%2CHU%2CIE%2CIS%2CLT%2CLV%2CMT%2CNL%2CNO%2CPL%2CPT%2CRO%2CSE%2CSK&Curr=EUR&currSwitchPos=&legendPos="
+        target="_blank" class="ref-card">
+        <div class="icon">😊</div>
+        <h3>Student Happiness</h3>
+        <p>Methodology: Assessment of overall happiness on a five-point scale ("Extremely happy" to "Extremely
+          unhappy"), averaged for each country.</p>
+      </a>
+
+      <a href="https://ubyssey.ca/news/ams-academic-experience-survey-2025/" target="_blank" class="ref-card">
+        <div class="icon">📰</div>
+        <h3>Academic Survey 2025</h3>
+        <p>Ubyssey News Trends</p>
+      </a>
+
+      <a href="https://database.eurostudent.eu/drm/?eust_nr=8&e=costs_all_key_m&fg=all_students&country_list=AT%2CAZ%2CCH%2CCZ%2CDE%2CDK%2CEE%2CES%2CFI%2CFR%2CGE%2CHR%2CHU%2CIE%2CIS%2CLT%2CLV%2CMT%2CNL%2CNO%2CPL%2CPT%2CRO%2CSE%2CSK&Curr=EUR&currSwitchPos=&legendPos="
+        target="_blank" class="ref-card">
+        <div class="icon">💰</div>
+        <h3>Housing Costs</h3>
+        <p>Eurostudent Key Costs</p>
+      </a>
+
+      <a href="https://database.eurostudent.eu/drm/?eust_nr=8&e=time_budget_all&fg=all_students&country_list=AT%2CAZ%2CCH%2CCZ%2CDE%2CDK%2CEE%2CES%2CFI%2CFR%2CGE%2CHR%2CHU%2CIE%2CIS%2CLT%2CLV%2CMT%2CNL%2CNO%2CPL%2CPT%2CRO%2CSE%2CSK&Curr=EUR&currSwitchPos=&legendPos="
+        target="_blank" class="ref-card">
+        <div class="icon">⏳</div>
+        <h3>Time Budget</h3>
+        <p>Work vs Study Breakdown</p>
+      </a>
+
+      <a href="https://database.eurostudent.eu/drm/?eust_nr=8&e=who_number&fg=all_students&country_list=AT%2CAZ%2CCH%2CCZ%2CDE%2CDK%2CEE%2CES%2CFI%2CFR%2CGE%2CHR%2CHU%2CIE%2CIS%2CLT%2CLV%2CMT%2CNL%2CNO%2CPL%2CPT%2CRO%2CSE%2CSK&Curr=EUR&currSwitchPos=&legendPos="
+        target="_blank" class="ref-card">
+        <div class="icon">👥</div>
+        <h3>Demographics</h3>
+        <p>Eurostudent Statistics</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- WHO-5 Theory Section -->
+  <section id="theory" style="margin-bottom: 40px; padding: 0 5%;">
+    <div class="card" style="text-align: left; padding: 30px;">
+      <h3 style="color: var(--accent-cyan); margin-bottom: 15px;">WHO-5 Mental Well-being Scale</h3>
+      <p style="color: var(--text-secondary); line-height: 1.6;">
+        The World Health Organisation- Five Well-Being Index (WHO-5) is a short self-reported measure of current mental
+        wellbeing. It consists of five statements, which respondents rate on a 6-point-scale from 0 (at no time) to 5
+        (all of the time).
+      </p>
+      <p style="color: var(--text-secondary); line-height: 1.6; margin-top: 10px;">
+        The total raw score, ranging from 0 to 25, is multiplied by 4 to give the final score, with 0 representing the
+        worst imaginable well-being and 100 representing the best imaginable well-being.
+      </p>
+    </div>
+  </section>
+
+  <!-- Detail Overlay -->
+  <div id="detail-overlay" class="hidden">
+    <button id="close-overlay" onclick="closeOverlay()">×</button>
+    <div id="overlay-content">
+      <!-- Dynamic Content -->
+    </div>
+  </div>
+
+  <!-- Load Data FIRST -->
+  <script src="data.js"></script>
+  <script src="background.js"></script>
+  <script src="sketch.js?v=202602151735"></script>
+  <script src="charts.js?v=202602151735"></script>
+</body>
+
+</html>
